@@ -3,7 +3,7 @@
 from geometry import *
 from inputData import *
 from plots import *
-
+from output import *
 import random
 import math
 
@@ -109,7 +109,7 @@ def find_max_intersection(arr):
             max_intersection = intersections
             max_intersection_element = elem
             
-    return max_intersection_element
+    return [max_intersection_element, max_intersection]
 
 def genetic_get_line(task):
     population = generate_population(geneticAlgorithmParams.POPULATION_SIZE, task)
@@ -119,17 +119,28 @@ def genetic_get_line(task):
         population = create_next_generation(population, task)
 
     with_fitness = calculate_fitness(population, task)
-    maximal = find_max_intersection(with_fitness)
+    result = find_max_intersection(with_fitness)
+    maximal = result[0]
+    fitness = result[1]
 
+    # print('----------------- Genetic algorithm -----------------')
+    # print('Number of all objects is ' + str(len(task.objects)))
+    # print('Number of intersected objects is ' + str(fitness))
+    # print(parse_individual_to_equation(maximal))
     line = create_line_from_individual(maximal[1], task)
-    return line
+    return line, maximal[1]
 
 
 def simulated_annealing_line(task):
     chromosome = generate_chromosome(task.Y)
     individual = simulated_annealing(chromosome, task)
     line = create_line_from_individual(individual, task)
-    return line
+    fitness = calculate_fitness_for_individual(individual, task)
+    # print('----------------- Simulated annealing -----------------')
+    # print('Number of all objects is ' + str(len(task.objects)))
+    # print('Number of intersected objects is ' + str(fitness))
+    # print(parse_individual_to_equation(individual))
+    return [line, individual]
 
 def simulated_annealing(initial_individual, task):
     current_individual = initial_individual
@@ -155,8 +166,3 @@ def simulated_annealing(initial_individual, task):
         iteration += 1
 
     return best_individual
-
-for task in tasks:
-    simulated_annealing_line = simulated_annealing_line(task)
-    draw_result(task, simulated_annealing_line)
-    genetic_line = genetic_get_line(task)

@@ -41,3 +41,20 @@ def create_line_from_individual(individual, task):
 
     y = tan * task.X + individual[1][1]
     return [individual[1],(task.X,y)]
+
+
+def sum(arr):
+ 
+    # initialize a variable
+    # to store the sum
+    # while iterating through
+    # the array later
+    suma = 0
+ 
+    # iterate through the array
+    # and add each element to the sum variable
+    # one at a time
+    for i in arr:
+        suma = suma + i
+ 
+    return(suma)
